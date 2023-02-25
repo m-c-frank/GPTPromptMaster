@@ -1,9 +1,9 @@
-updatePrompts();
 const targetNode = document.querySelector('#__next');
-const observer = new MutationObserver(function (mutations) {
-    mutations.forEach(function (mutation) {
-        if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
-            console.log("derp");
+
+const observer = new MutationObserver(mutations => {
+    mutations.forEach(mutation => {
+        if (mutation.type === 'childList' && mutation.addedNodes?.length > 0) {
+            console.log('derp');
             updatePrompts();
         }
     });
@@ -13,83 +13,79 @@ const config = { attributes: true, childList: true, characterData: true };
 
 observer.observe(targetNode, config);
 
-function get_textarea() {
-    const textareas = document.getElementsByTagName("textarea");
-    if (textareas.length == 1) {
-        return textareas[0];
-    } else {
-        return null;
-    }
-}
+const getTextArea = () => {
+    const textarea = document.querySelector('textarea');
+    return textarea ?? null;
+};
 
-
-
-function attach_selector(promptlist, prompttype) {
+const createPromptSelect = (promptList, promptType) => {
     const promptSelect = document.createElement('select');
-    promptSelect.classList.add(prompttype + '-select');
-    promptSelect.classList.add('prompt-select');
-    promptSelect.innerHTML = `<option value="" selected>No ${prompttype}</option>`;
+    promptSelect.classList.add(`${promptType}-select`, 'prompt-select');
+    promptSelect.innerHTML = `<option value="" selected>No ${promptType}</option>`;
 
-    promptlist.forEach(prompt => {
+    promptList.forEach(({ text, name }) => {
         const option = document.createElement('option');
-        option.value = prompt.text;
-        option.text = prompt.name;
+        option.value = text;
+        option.text = name;
         promptSelect.appendChild(option);
     });
 
-    let promptContainer = document.querySelector('.' + prompttype + '-container');
+    return promptSelect;
+};
+
+const attachSelector = (promptList, promptType) => {
+    let promptContainer = document.querySelector(`.${promptType}-container`);
+
     if (promptContainer) {
+        const promptSelect = createPromptSelect(promptList, promptType);
         promptContainer.replaceChild(promptSelect, promptContainer.firstChild);
     } else {
         promptContainer = document.createElement('div');
-        promptContainer.classList.add(prompttype + '-container');
+        const promptSelect = createPromptSelect(promptList, promptType);
+        promptContainer.classList.add(`${promptType}-container`);
         promptContainer.appendChild(promptSelect);
     }
+
     return promptContainer;
-}
+};
 
-function inject_prompts(textarea) {
-    const form = textarea.closest('form')
-    prepromptSelector = form.querySelector('.preprompt-select');
-    postpromptSelector = form.querySelector('.postprompt-select');
-    textarea.value = prepromptSelector.value + "\n\n" + textarea.value + "\n\n" + postpromptSelector.value;
+const injectPrompts = textarea => {
+    const form = textarea.closest('form');
+    const prepromptSelector = form.querySelector('.preprompt-select');
+    const postpromptSelector = form.querySelector('.postprompt-select');
+    textarea.value = `${prepromptSelector?.value ?? ''}\n\n${textarea.value}\n\n${postpromptSelector?.value ?? ''}`;
     textarea.value = textarea.value.trim();
-}
+};
 
-function updatePrompts() {
-    const textarea = get_textarea();
+const updatePrompts = async () => {
+    const textarea = getTextArea();
 
-    let prePrompts = [];
-    let postPrompts = [];
-    chrome.storage.local.get(['preprompts', 'postprompts'], function (data) {
-        prePrompts = data.preprompts || [];
-        postPrompts = data.postprompts || [];
+    const { preprompts = [], postprompts = [] } = await chrome.storage.local.get(['preprompts', 'postprompts']);
 
-        promptContainerWrapper = document.createElement('div');
-        promptContainerWrapper.classList.add('prompt-container-wrapper');
+    const promptContainerWrapper = document.createElement('div');
+    promptContainerWrapper.classList.add('prompt-container-wrapper');
 
-        prepromptSelector = attach_selector(prePrompts, 'preprompt');
-        postpromptSelector = attach_selector(postPrompts, 'postprompt');
+    const prepromptSelector = attachSelector(preprompts, 'preprompt');
+    const postpromptSelector = attachSelector(postprompts, 'postprompt');
 
-        promptContainerWrapper.appendChild(prepromptSelector);
-        promptContainerWrapper.appendChild(postpromptSelector);
+    promptContainerWrapper.appendChild(prepromptSelector);
+    promptContainerWrapper.appendChild(postpromptSelector);
 
+    textarea.parentNode.insertBefore(promptContainerWrapper, textarea);
 
-        textarea.parentNode.insertBefore(promptContainerWrapper, textarea);
+    const parent = textarea.parentNode;
+    const button = parent.querySelector('button');
+    const originalClickHandler = button.onclick;
 
+    const clickHandler = event => {
+        injectPrompts(textarea);
 
-        parent = textarea.parentNode;
-        button = parent.querySelector('button');
-        const originalClickHandler = button.onclick;
-
-        function clickhandler(event) {
-            inject_prompts(textarea);
-
-            if (originalClickHandler) {
-                originalClickHandler.call(button, event);
-            }
+        if (originalClickHandler) {
+            originalClickHandler.call(button, event);
         }
+    };
 
-        button.onclick = clickhandler;
-    });
-}
+    button.onclick = clickHandler;
+};
+
+updatePrompts();
