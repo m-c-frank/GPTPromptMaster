@@ -1,0 +1,130 @@
+body {
+    font-family: Arial, sans-serif;
+}
+
+h1 {
+    font-size: 24px;
+    margin-top: 0;
+}
+
+label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: bold;
+}
+
+select,
+textarea,
+input[type="text"] {
+    display: block;
+    width: 100%;
+    margin-bottom: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 6px;
+    font-size: 16px;
+}
+
+button {
+    display: block;
+    margin-top: 12px;
+    padding: 6px 12px;
+    border: 0;
+    border-radius: 4px;
+    background-color: #4285f4;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #3367d6;
+}
+
+.prompt-section {
+    margin-bottom: 24px;
+}
+
+.toggle-switch-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.toggle-label-left {
+    order: 0;
+}
+
+.toggle-label-right {
+    order: 2;
+}
+
+.switch {
+    display: inline-block;
+    height: 30px;
+    position: relative;
+    width: 60px;
+}
+
+.switch input {
+    display: none;
+}
+
+.slider {
+    background-color: #4CAF50;
+    border-radius: 30px;
+    bottom: 0;
+    cursor: pointer;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    transition: .4s;
+}
+
+.slider:before {
+    background-color: #fff;
+    border-radius: 50%;
+    bottom: 4px;
+    content: "";
+    height: 22px;
+    left: 4px;
+    position: absolute;
+    transition: .4s;
+    width: 22px;
+}
+
+input:checked+.slider {
+    background-color: #2196F3;
+}
+
+input:checked+.slider:before {
+    transform: translateX(30px);
+}
+
+.wrapper {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.toggle-switch-wrapper {
+    display: flex;
+    justify-content: space-between;
+    max-width: 512px;
+    align-items: center;
+    margin-bottom: 20px;
+    margin: 0 auto;
+}
+
+.button-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    margin-top: 8px;
+}
+
+.settings-button{
+    margin-right: 8px;
+}

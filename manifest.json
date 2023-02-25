@@ -1,0 +1,18 @@
+{
+    "manifest_version": 3,
+    "name": "gptpromptmaster",
+    "version": "1.0",
+    "description": "Changes the value of a textarea via a custom menu",
+    "action": {
+      "default_popup": "popup.html"
+    },
+    "permissions": [
+      "activeTab",
+      "scripting",
+      "storage"
+    ],
+    "content_security_policy": {
+      "extension_pages": "script-src 'self'; object-src 'self'"
+    }
+  }
+  
