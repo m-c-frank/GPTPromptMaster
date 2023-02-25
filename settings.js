@@ -1,20 +1,21 @@
 // Get the prompt toggle switch and prompt section
 const promptToggle = document.querySelector('.prompt-toggle');
+const promptSection = document.querySelector('#prompt-section');
 
 // Listen for changes to the prompt toggle switch
 promptToggle.addEventListener('change', () => {
     // Check the toggle switch position and set the prompt type accordingly
     const promptType = promptToggle.checked ? 'post' : 'pre';
 
-    // Get the prompts from local storage and render them in the prompt section
-    const prompts = JSON.parse(localStorage.getItem(`${promptType}prompts`)) || [];
-    renderPrompts(prompts, promptType);
+    // Get the prompts from storage and render them in the prompt section
+    chrome.storage.local.get(promptType + 'prompts', function (data) {
+        const prompts = data[promptType + 'prompts'] || [];
+        renderPrompts(prompts, promptType);
+    });
 });
 
 // Function to render prompts in the prompt section
 function renderPrompts(prompts, promptType) {
-
-    const promptSection = document.querySelector('#prompt-section');
     // Clear the prompt section
     promptSection.innerHTML = '';
 
@@ -60,25 +61,13 @@ function renderPrompts(prompts, promptType) {
             return;
         }
 
-        // Check if the prompt already exists, and if so, update it
-        const existingPromptIndex = prompts.findIndex(prompt => prompt.name === name);
-        if (existingPromptIndex !== -1) {
-            prompts[existingPromptIndex].text = text;
-        } else {
-            // Otherwise, add a new prompt to the array
-            prompts.push({ name, text });
-        }
-
-        // Save the updated prompts to local storage and re-render the prompt section
-        localStorage.setItem(`${promptType}prompts`, JSON.stringify(prompts));
-        renderPrompts(prompts, promptType);
+        // Save the prompt to storage and re-render the prompt section
+        savePrompt({ name, text }, promptType);
 
         // Clear the inputs
         promptNameInput.value = '';
         promptTextInput.value = '';
     });
-
-
 
     // Create a delete button for the prompt
     const deleteButton = document.createElement('button');
@@ -88,30 +77,24 @@ function renderPrompts(prompts, promptType) {
     deleteButton.addEventListener('click', () => {
         const name = promptNameInput.value;
 
-        // Find the index of the prompt to delete
-        const promptIndex = prompts.findIndex(prompt => prompt.name === name);
-
-        // Delete the prompt and update the prompt section
-        prompts.splice(promptIndex, 1);
-        localStorage.setItem(`${promptType}prompts`, JSON.stringify(prompts));
-        renderPrompts(prompts, promptType);
+        // Delete the prompt from storage and re-render the prompt section
+        deletePrompt(name, promptType);
 
         // Clear the inputs
         promptNameInput.value = '';
         promptTextInput.value = '';
     });
-    buttonContainer.appendChild(saveButton);
-    buttonContainer.appendChild(deleteButton);
 
     // Add the button container and the prompt elements to the prompt section
     promptSection.appendChild(promptSelect);
     promptSection.appendChild(promptNameInput);
     promptSection.appendChild(promptTextInput);
     promptSection.appendChild(buttonContainer);
+    buttonContainer.appendChild(saveButton);
+    buttonContainer.appendChild(deleteButton);
 
-
-
-    // Listen for changes to the prompt select element and populate the inputs with the selected prompt's values
+    // Listen for changes to the prompt select element and populate the
+    // inputs with the selected prompt's values
     promptSelect.addEventListener('change', () => {
         const name = promptSelect.value;
         const prompt = prompts.find(prompt => prompt.name === name);
@@ -126,6 +109,47 @@ function renderPrompts(prompts, promptType) {
     });
 }
 
+// Function to save a prompt to storage
+function savePrompt(prompt, promptType) {
+    chrome.storage.local.get(promptType + 'prompts', function (data) {
+        const prompts = data[promptType + 'prompts'] || [];
+
+        // Check if the prompt already exists, and if so, update it
+        const existingPromptIndex = prompts.findIndex(p => p.name === prompt.name);
+        if (existingPromptIndex !== -1) {
+            prompts[existingPromptIndex].text = prompt.text;
+        } else {
+            // Otherwise, add a new prompt to the array
+            prompts.push(prompt);
+        }
+
+        // Save the updated prompts to storage and re-render the prompt section
+        chrome.storage.local.set({ [promptType + 'prompts']: prompts }, function () {
+            renderPrompts(prompts, promptType);
+        });
+    });
+}
+
+// Function to delete a prompt from storage
+function deletePrompt(promptName, promptType) {
+    chrome.storage.local.get(promptType + 'prompts', function (data) {
+        const prompts = data[promptType + 'prompts'] || [];
+
+        // Find the index of the prompt to delete
+        const promptIndex = prompts.findIndex(p => p.name === promptName);
+
+        // Delete the prompt and save the updated prompts to storage
+        if (promptIndex !== -1) {
+            prompts.splice(promptIndex, 1);
+            chrome.storage.local.set({ [promptType + 'prompts']: prompts }, function () {
+                renderPrompts(prompts, promptType);
+            });
+        }
+    });
+}
+
 // Initialize the prompt section with the pre-prompts
-const prompts = JSON.parse(localStorage.getItem('preprompts')) || [];
-renderPrompts(prompts, 'pre');
+chrome.storage.local.get('preprompts', function (data) {
+    const prompts = data.preprompts || [];
+    renderPrompts(prompts, 'pre');
+});

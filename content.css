@@ -1,0 +1,14 @@
+.prompt-select{
+    color:black;
+    font-size: small;
+    width: 192px;
+    margin-right: 4px;
+}
+
+/* this is a div and the childern should be alighned horizontally */
+.prompt-container-wrapper{
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    margin-bottom: 8px;
+}

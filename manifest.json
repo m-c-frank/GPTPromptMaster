@@ -11,6 +11,13 @@
       "scripting",
       "storage"
     ],
+    "content_scripts": [
+      {
+        "matches": ["https://chat.openai.com/*"],
+        "css": ["content.css"],
+        "js": ["content.js"]
+      }
+    ],
     "content_security_policy": {
       "extension_pages": "script-src 'self'; object-src 'self'"
     }
