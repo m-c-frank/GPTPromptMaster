@@ -1,6 +1,9 @@
 # GPTPromptMaster
 This is a chrome extension that allows you to define your own pre and post prompts that are added to the chatGPT prompt.
 
+[![Youtube Video](https://img.youtube.com/vi/MKMO05k7cfU/0.jpg)](https://www.youtube.com/watch?v=MKMO05k7cfU)
+
+
 ## Define Pre and Post Prompts
 To define your own pre and post prompts, go to the extension options and click `Settings`:
 
