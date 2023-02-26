@@ -1,3 +1,10 @@
+<style>
+    img {
+        width: 512px;
+        height: auto;
+    }
+</style>
+
 # GPTPromptMaster
 This is a chrome extension that allows you to define your own pre and post prompts that are added to the chatGPT prompt.
 
@@ -22,3 +29,19 @@ To use your pre and post prompts, go to the chatGPT website and select the creat
 The pre and post prompts are added to the prompt only if you submit the prompt with the button in the textarea.
 
 ![Prompt Example Result](https://cloud.hs-augsburg.de/s/enCpRynkRAijbWn/preview)
+
+
+# Installation from Source
+To install the extension from source, you need to clone the repository and load the extension into your browser.
+
+In chrome open the extensions page by typing 
+
+```
+chrome://extensions
+```
+
+in the address bar.
+
+Then enable the developer mode in the top right corner and click `Load unpacked`.
+
+Then select the folder of the cloned repository and the extension should be loaded.
