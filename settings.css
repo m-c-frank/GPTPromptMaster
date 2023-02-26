@@ -25,6 +25,10 @@ input[type="text"] {
     font-size: 16px;
 }
 
+textarea{
+    min-height: 128px;
+}
+
 button {
     display: block;
     margin-top: 12px;
