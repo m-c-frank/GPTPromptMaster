@@ -1,35 +1,41 @@
-<style>
-    img {
-        width: 512px;
-        height: auto;
-    }
-</style>
-
 # GPTPromptMaster
 This is a chrome extension that allows you to define your own pre and post prompts that are added to the chatGPT prompt.
 
 ## Define Pre and Post Prompts
 To define your own pre and post prompts, go to the extension options and click `Settings`:
 
-![Settings](https://cloud.hs-augsburg.de/s/dfQ8Nwgr63piWFH/preview)
+<p>
+  <img src="https://cloud.hs-augsburg.de/s/dfQ8Nwgr63piWFH/preview" alt="Settings" style="width:512px; height:auto">
+</p>
+
 
 In the settings, you can define your own pre and post prompts:
 
-![Prompt Definition Example 1](https://cloud.hs-augsburg.de/s/jqDprSmALPo5YXe/preview)
+<p>
+  <img src="https://cloud.hs-augsburg.de/s/jqDprSmALPo5YXe/preview" alt="Prompt Definition Example 1" style="width:512px; height:auto">
+</p>
 
-![Prompt Definition Example 2](https://cloud.hs-augsburg.de/s/TcfdWqGWRYGadoR/preview)
+<p>
+  <img src="https://cloud.hs-augsburg.de/s/TcfdWqGWRYGadoR/preview" alt="Prompt Definition Example 2" style="width:512px; height:auto">
+</p>
+
 
 ## Use Pre and Post Prompts
 To use your pre and post prompts, go to the chatGPT website and select the created promtpts directly in the text field:
 
-![Prompt Use Example](https://cloud.hs-augsburg.de/s/7baE4jwTWFPZefX/preview)
+<p>
+    <img src="https://cloud.hs-augsburg.de/s/7baE4jwTWFPZefX/preview" alt="Prompt Use Example" style="width:512px; height:auto">
+</p>
 
-![Inserted Prompt](https://cloud.hs-augsburg.de/s/iyBa4TGtsbyTCQN/preview)
+<p>
+    <img src="https://cloud.hs-augsburg.de/s/iyBa4TGtsbyTCQN/preview" alt="Inserted Prompt" style="width:512px; height:auto">
+</p>
 
 The pre and post prompts are added to the prompt only if you submit the prompt with the button in the textarea.
 
-![Prompt Example Result](https://cloud.hs-augsburg.de/s/enCpRynkRAijbWn/preview)
-
+<p>
+    <img src="https://cloud.hs-augsburg.de/s/enCpRynkRAijbWn/preview" alt="Prompt Example Result" style="width:512px; height:auto">
+</p>
 
 # Installation from Source
 To install the extension from source, you need to clone the repository and load the extension into your browser.
