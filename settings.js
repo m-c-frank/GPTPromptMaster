@@ -1,3 +1,4 @@
+CSVSEPARATOR = "\t";
 // Get the prompt toggle switch and prompt section
 const promptToggle = document.querySelector('.prompt-toggle');
 const promptSection = document.querySelector('#prompt-section');
@@ -14,17 +15,15 @@ promptToggle.addEventListener('change', () => {
     });
 });
 
-// Function to render prompts in the prompt section
-function renderPrompts(prompts, promptType) {
-    // Clear the prompt section
+function clearPromptSection() {
     promptSection.innerHTML = '';
+}
 
-    // Create a select element for the prompts
+function createPromptSelect(prompts, promptType) {
     const promptSelect = document.createElement('select');
     promptSelect.classList.add('prompt-select');
     promptSelect.innerHTML = `<option value="" disabled selected>Select a ${promptType}prompt</option>`;
 
-    // Add each prompt as an option in the select element
     prompts.forEach(prompt => {
         const option = document.createElement('option');
         option.value = prompt.name;
@@ -32,21 +31,34 @@ function renderPrompts(prompts, promptType) {
         promptSelect.appendChild(option);
     });
 
-    // Create a text input for the prompt name
+    return promptSelect;
+}
+
+function createPromptNameInput() {
     const promptNameInput = document.createElement('input');
     promptNameInput.classList.add('prompt-name-input');
     promptNameInput.type = 'text';
     promptNameInput.placeholder = 'Enter a name for your prompt';
 
-    // Create a textarea for the prompt text
+    return promptNameInput;
+}
+
+function createPromptTextInput(promptType) {
     const promptTextInput = document.createElement('textarea');
     promptTextInput.classList.add('prompt-text-input');
     promptTextInput.placeholder = `Enter your ${promptType}prompt text`;
 
+    return promptTextInput;
+}
+
+function createButtonContainer() {
     const buttonContainer = document.createElement('div');
     buttonContainer.classList.add('button-container');
 
-    // Create a save button for the prompt
+    return buttonContainer;
+}
+
+function createSaveButton(promptNameInput, promptTextInput, promptType, prompts) {
     const saveButton = document.createElement('button');
     saveButton.classList.add('save-button');
     saveButton.classList.add('settings-button');
@@ -55,21 +67,22 @@ function renderPrompts(prompts, promptType) {
         const name = promptNameInput.value;
         const text = promptTextInput.value;
 
-        // Validate that the name and text are not empty
         if (name.trim() === '' || text.trim() === '') {
             alert('Please enter a name and text for your prompt.');
             return;
         }
 
-        // Save the prompt to storage and re-render the prompt section
         savePrompt({ name, text }, promptType);
+        renderPrompts(prompts, promptType);
 
-        // Clear the inputs
         promptNameInput.value = '';
         promptTextInput.value = '';
     });
 
-    // Create a delete button for the prompt
+    return saveButton;
+}
+
+function createDeleteButton(promptNameInput, promptType, prompts) {
     const deleteButton = document.createElement('button');
     deleteButton.classList.add('delete-button');
     deleteButton.classList.add('settings-button');
@@ -77,24 +90,138 @@ function renderPrompts(prompts, promptType) {
     deleteButton.addEventListener('click', () => {
         const name = promptNameInput.value;
 
-        // Delete the prompt from storage and re-render the prompt section
         deletePrompt(name, promptType);
+        renderPrompts(prompts, promptType);
 
-        // Clear the inputs
         promptNameInput.value = '';
         promptTextInput.value = '';
     });
 
-    // Add the button container and the prompt elements to the prompt section
+    return deleteButton;
+}
+
+
+function createImportButton(promptType, prompts) {
+    const importButton = document.createElement('button');
+    importButton.classList.add('import-button');
+    importButton.classList.add('settings-button');
+    importButton.textContent = 'Import';
+    importButton.addEventListener('click', () => {
+        const fileInput = document.createElement('input');
+        fileInput.type = 'file';
+        fileInput.accept = '.txt,.csv';
+
+        fileInput.addEventListener('change', event => {
+            const file = event.target.files[0];
+            const reader = new FileReader();
+            reader.onload = () => {
+                const importedPrompts = parsePrompts(reader.result);
+                mergePrompts(importedPrompts, promptType, prompts);
+            };
+            reader.readAsText(file);
+        });
+
+        fileInput.click();
+    });
+
+    return importButton;
+}
+
+function parsePrompts(fileContents) {
+    const lines = fileContents.split('\n');
+    const prompts = [];
+
+    for (let i = 0; i < lines.length; i++) {
+        const line = lines[i].trim();
+
+        if (line) {
+            const [name, text] = line.split(CSVSEPARATOR);
+            prompts.push({ name: name.trim(), text: text.trim() });
+        }
+    }
+
+    return prompts;
+}
+
+function mergePrompts(importedPrompts, promptType, prompts) {
+    const mergedPrompts = [...prompts];
+
+    for (let i = 0; i < importedPrompts.length; i++) {
+        const importedPrompt = importedPrompts[i];
+        const existingPromptIndex = mergedPrompts.findIndex(p => p.name === importedPrompt.name);
+
+        if (existingPromptIndex !== -1) {
+            mergedPrompts[existingPromptIndex].text = importedPrompt.text;
+        } else {
+            mergedPrompts.push(importedPrompt);
+        }
+    }
+
+    chrome.storage.local.set({ [promptType + 'prompts']: mergedPrompts }, function () {
+        renderPrompts(mergedPrompts, promptType);
+    });
+}
+
+function createExportButton(promptType, prompts) {
+    const exportButton = document.createElement('button');
+    exportButton.classList.add('export-button');
+    exportButton.classList.add('settings-button');
+    exportButton.textContent = 'Export';
+    exportButton.addEventListener('click', () => {
+        const promptsString = stringifyPrompts(prompts);
+        const filename = promptType + 'prompts.csv';
+        download(promptsString, filename, 'text/csv');
+    });
+
+    return exportButton;
+}
+
+function stringifyPrompts(prompts) {
+    let promptsString = '';
+
+    for (let i = 0; i < prompts.length; i++) {
+        const prompt = prompts[i];
+        promptsString += `${prompt.name}${CSVSEPARATOR}${prompt.text}\n`;
+    }
+
+    return promptsString;
+}
+
+function download(data, filename, type) {
+    const file = new Blob([data], { type: type });
+    const a = document.createElement('a');
+    const url = URL.createObjectURL(file);
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => {
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+    }, 0);
+}
+
+function addElementsToPromptSection(promptSelect, promptNameInput, promptTextInput, buttonContainer, promptType, prompts) {
     promptSection.appendChild(promptSelect);
     promptSection.appendChild(promptNameInput);
     promptSection.appendChild(promptTextInput);
     promptSection.appendChild(buttonContainer);
-    buttonContainer.appendChild(saveButton);
-    buttonContainer.appendChild(deleteButton);
+    buttonContainer.appendChild(createSaveButton(promptNameInput, promptTextInput, promptType, prompts));
+    buttonContainer.appendChild(createDeleteButton(promptNameInput, promptType, prompts));
+    buttonContainer.appendChild(createImportButton(promptType, prompts));
+    buttonContainer.appendChild(createExportButton(promptType, prompts));
+}
 
-    // Listen for changes to the prompt select element and populate the
-    // inputs with the selected prompt's values
+function renderPrompts(prompts, promptType) {
+    clearPromptSection();
+
+    const promptSelect = createPromptSelect(prompts, promptType);
+    const promptNameInput = createPromptNameInput();
+    const promptTextInput = createPromptTextInput(promptType);
+    const buttonContainer = createButtonContainer();
+
+    addElementsToPromptSection(promptSelect, promptNameInput, promptTextInput, buttonContainer, promptType, prompts);
+
     promptSelect.addEventListener('change', () => {
         const name = promptSelect.value;
         const prompt = prompts.find(prompt => prompt.name === name);
