@@ -25,7 +25,7 @@ input[type="text"] {
     font-size: 16px;
 }
 
-textarea{
+textarea {
     min-height: 128px;
 }
 
@@ -129,6 +129,12 @@ input:checked+.slider:before {
     margin-top: 8px;
 }
 
-.settings-button{
+.settings-button {
     margin-right: 8px;
+}
+
+.prompt-buttons {
+    position: absolute;
+    top: 10px;
+    right: 10px;
 }
