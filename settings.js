@@ -5,7 +5,7 @@ const promptSection = document.querySelector('#prompt-section');
 const resetButton = document.querySelector('#reset-button');
 
 resetButton.addEventListener('click', () => {
-    if (confirm('Are you sure you want to reset all settings?')){
+    if (confirm('Are you sure you want to reset all settings?')) {
         chrome.storage.local.clear();
         location.reload();
     }
@@ -97,14 +97,14 @@ function createDeleteButton(promptNameInput, promptTextInput, promptType, prompt
     deleteButton.textContent = 'Delete';
     deleteButton.addEventListener('click', () => {
         const name = promptNameInput.value;
-        
+
         deletePrompt(name, promptType);
         renderPrompts(prompts, promptType);
-    
+
         promptNameInput.value = '';
         promptTextInput.value = '';
     });
-    
+
 
     return deleteButton;
 }
@@ -116,6 +116,7 @@ function createImportButton(promptType, prompts) {
     importButton.classList.add('settings-button');
     importButton.textContent = 'Import';
     importButton.addEventListener('click', () => {
+        const separator = prompt('Please enter the separator for the file (e.g. default is ";"):', ';');
         const fileInput = document.createElement('input');
         fileInput.type = 'file';
         fileInput.accept = '.txt,.csv';
@@ -124,7 +125,7 @@ function createImportButton(promptType, prompts) {
             const file = event.target.files[0];
             const reader = new FileReader();
             reader.onload = () => {
-                const importedPrompts = parsePrompts(reader.result);
+                const importedPrompts = parsePrompts(reader.result, separator);
                 mergePrompts(importedPrompts, promptType, prompts);
             };
             reader.readAsText(file);
@@ -136,7 +137,17 @@ function createImportButton(promptType, prompts) {
     return importButton;
 }
 
-function parsePrompts(fileContents) {
+function parsePrompts(fileContents, separator) {
+    if (!fileContents.trim()) {
+        alert("File is empty.");
+        return [];
+    }
+
+    if (typeof separator !== "string" || separator.trim().length === 0) {
+        alert("Invalid separator.");
+        return [];
+    }
+
     const lines = fileContents.split('\n');
     const prompts = [];
 
@@ -144,13 +155,20 @@ function parsePrompts(fileContents) {
         const line = lines[i].trim();
 
         if (line) {
-            const [name, text] = line.split(CSVSEPARATOR);
+            const splitted = line.split(separator);
+            if (splitted.length !== 2) {
+                alert(`Invalid line ${i + 1}: ${line}\nAborting import...`);
+                return [];
+            }
+            const name = splitted[0];
+            const text = splitted[1];
             prompts.push({ name: name.trim(), text: text.trim() });
         }
     }
 
     return prompts;
 }
+
 
 function mergePrompts(importedPrompts, promptType, prompts) {
     const mergedPrompts = [...prompts];
@@ -177,7 +195,8 @@ function createExportButton(promptType, prompts) {
     exportButton.classList.add('settings-button');
     exportButton.textContent = 'Export';
     exportButton.addEventListener('click', () => {
-        const promptsString = stringifyPrompts(prompts);
+        const separator = prompt('Please enter the separator for the file (e.g. default is ";"):', ';');
+        const promptsString = stringifyPrompts(prompts, separator);
         const filename = promptType + 'prompts.csv';
         download(promptsString, filename, 'text/csv');
     });
@@ -185,12 +204,12 @@ function createExportButton(promptType, prompts) {
     return exportButton;
 }
 
-function stringifyPrompts(prompts) {
+function stringifyPrompts(prompts, separator) {
     let promptsString = '';
 
     for (let i = 0; i < prompts.length; i++) {
         const prompt = prompts[i];
-        promptsString += `${prompt.name}${CSVSEPARATOR}${prompt.text}\n`;
+        promptsString += `${prompt.name}${separator}${prompt.text}\n`;
     }
 
     return promptsString;
