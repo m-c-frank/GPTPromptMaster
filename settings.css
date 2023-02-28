@@ -138,3 +138,9 @@ input:checked+.slider:before {
     top: 10px;
     right: 10px;
 }
+
+.reset-button {
+    position: fixed;
+    bottom: 10px;
+    left: 10px;
+}
