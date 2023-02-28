@@ -2,6 +2,14 @@ CSVSEPARATOR = "\t";
 // Get the prompt toggle switch and prompt section
 const promptToggle = document.querySelector('.prompt-toggle');
 const promptSection = document.querySelector('#prompt-section');
+const resetButton = document.querySelector('#reset-button');
+
+resetButton.addEventListener('click', () => {
+    if (confirm('Are you sure you want to reset all settings?')){
+        chrome.storage.local.clear();
+        location.reload();
+    }
+});
 
 // Listen for changes to the prompt toggle switch
 promptToggle.addEventListener('change', () => {
@@ -82,20 +90,21 @@ function createSaveButton(promptNameInput, promptTextInput, promptType, prompts)
     return saveButton;
 }
 
-function createDeleteButton(promptNameInput, promptType, prompts) {
+function createDeleteButton(promptNameInput, promptTextInput, promptType, prompts) {
     const deleteButton = document.createElement('button');
     deleteButton.classList.add('delete-button');
     deleteButton.classList.add('settings-button');
     deleteButton.textContent = 'Delete';
     deleteButton.addEventListener('click', () => {
         const name = promptNameInput.value;
-
+        
         deletePrompt(name, promptType);
         renderPrompts(prompts, promptType);
-
+    
         promptNameInput.value = '';
         promptTextInput.value = '';
     });
+    
 
     return deleteButton;
 }
@@ -207,7 +216,7 @@ function addElementsToPromptSection(promptSelect, promptNameInput, promptTextInp
     promptSection.appendChild(promptTextInput);
     promptSection.appendChild(buttonContainer);
     buttonContainer.appendChild(createSaveButton(promptNameInput, promptTextInput, promptType, prompts));
-    buttonContainer.appendChild(createDeleteButton(promptNameInput, promptType, prompts));
+    buttonContainer.appendChild(createDeleteButton(promptNameInput, promptTextInput, promptType, prompts));
     buttonContainer.appendChild(createImportButton(promptType, prompts));
     buttonContainer.appendChild(createExportButton(promptType, prompts));
 }

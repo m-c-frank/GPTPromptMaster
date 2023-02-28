@@ -138,3 +138,18 @@ input:checked+.slider:before {
     top: 10px;
     right: 10px;
 }
+
+.import-button {
+    margin-left: auto;
+}
+
+
+.export-button {
+    margin-right: 0;
+}
+
+.reset-button {
+    position: fixed;
+    bottom: 10px;
+    left: 10px;
+}
