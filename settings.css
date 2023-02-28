@@ -139,6 +139,15 @@ input:checked+.slider:before {
     right: 10px;
 }
 
+.import-button {
+    margin-left: auto;
+}
+
+
+.export-button {
+    margin-right: 0;
+}
+
 .reset-button {
     position: fixed;
     bottom: 10px;
