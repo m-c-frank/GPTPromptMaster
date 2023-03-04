@@ -3,7 +3,6 @@ const targetNode = document.querySelector('#__next');
 const observer = new MutationObserver(mutations => {
     mutations.forEach(mutation => {
         if (mutation.type === 'childList' && mutation.addedNodes?.length > 0) {
-            console.log('derp');
             updatePrompts();
         }
     });
@@ -57,6 +56,13 @@ const injectPrompts = textarea => {
     textarea.value = textarea.value.trim();
 };
 
+const clearSelections = () => {
+    const prepromptSelector = document.querySelector('.preprompt-select');
+    const postpromptSelector = document.querySelector('.postprompt-select');
+    prepromptSelector.selectedIndex = 0;
+    postpromptSelector.selectedIndex = 0;
+};
+
 const updatePrompts = async () => {
     const textarea = getTextArea();
 
@@ -73,19 +79,28 @@ const updatePrompts = async () => {
 
     textarea.parentNode.insertBefore(promptContainerWrapper, textarea);
 
-    const parent = textarea.parentNode;
-    const button = parent.querySelector('button');
-    const originalClickHandler = button.onclick;
+    const form = textarea.closest('form');
 
-    const clickHandler = event => {
+    const originalSubmitHandler = form.onsubmit;
+
+    const submitHandler = event => {
         injectPrompts(textarea);
 
-        if (originalClickHandler) {
-            originalClickHandler.call(button, event);
+        clearSelections();
+
+        if (originalSubmitHandler) {
+            originalSubmitHandler.call(form, event);
         }
     };
 
-    button.onclick = clickHandler;
+    form.onsubmit = submitHandler;
+
+    textarea.addEventListener("keydown", event => {
+        if (event.key === "Enter" && !event.shiftKey) {
+            form.dispatchEvent(new Event("submit"));
+            event.preventDefault();
+        }
+    });
 };
 
 updatePrompts();
