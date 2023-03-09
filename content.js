@@ -57,10 +57,15 @@ const injectPrompts = textarea => {
 };
 
 const clearSelections = () => {
-    const prepromptSelector = document.querySelector('.preprompt-select');
-    const postpromptSelector = document.querySelector('.postprompt-select');
-    prepromptSelector.selectedIndex = 0;
-    postpromptSelector.selectedIndex = 0;
+    chrome.storage.local.get("clearSelection", function (data) {
+        console.log(data)
+        if (data.clearSelection) {
+            const prepromptSelector = document.querySelector('.preprompt-select');
+            const postpromptSelector = document.querySelector('.postprompt-select');
+            prepromptSelector.selectedIndex = 0;
+            postpromptSelector.selectedIndex = 0;
+        }
+    });
 };
 
 const updatePrompts = async () => {
