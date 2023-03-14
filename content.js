@@ -89,6 +89,7 @@ const updatePrompts = async () => {
     const originalSubmitHandler = form.onsubmit;
 
     const submitHandler = event => {
+        event.preventDefault();
         injectPrompts(textarea);
 
         clearSelections();
@@ -102,8 +103,8 @@ const updatePrompts = async () => {
 
     textarea.addEventListener("keydown", event => {
         if (event.key === "Enter" && !event.shiftKey) {
-            form.dispatchEvent(new Event("submit"));
             event.preventDefault();
+            submitHandler(event);
         }
     });
 };

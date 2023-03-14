@@ -43,6 +43,8 @@ The pre and post prompts are added to the prompt only if you submit the prompt w
 </p>
 
 # Installation from Source
+
+## Chrome
 To install the extension from source, you need to clone the repository and load the extension into your browser.
 
 In chrome open the extensions page by typing 
@@ -56,3 +58,16 @@ in the address bar.
 Then enable the developer mode in the top right corner and click `Load unpacked`.
 
 Then select the folder of the cloned repository and the extension should be loaded.
+
+
+## Firefox
+To install the extension from source, you need to clone the repository and load the extension into your browser.
+
+In firefox open the extensions page and click on the `Debug Add-ons` button in the top right corner.
+
+Then click on `Load Temporary Add-on` and select the `manifest.json` file in the cloned repository.
+
+The extension should be loaded.
+
+Now go to chat.openai.com and you should see the extension in the top right corner.
+Change the setting to enable this extension to always work on the website.
