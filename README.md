@@ -6,7 +6,7 @@ See below for how to install it in chrome and firefox!
 See at bottom of the file
 
 ## Firefox Installation
-Link to Firefox Add Ons: [addons.mozilla.org/gptpromptmaster](https://addons.mozilla.org/firefox/addon/gptpromptmaster/)
+Link to Firefox Add On: [addons.mozilla.org/gptpromptmaster](https://addons.mozilla.org/firefox/addon/gptpromptmaster/)
 
 ## Click on this image to get to the youtube video:
 
