@@ -2,7 +2,13 @@
 This is a browser extension that allows you to define your own pre and post prompts that are added to the chatGPT prompt.
 See below for how to install it in chrome and firefox!
 
-Click on this image to get to the youtube video:
+## Chrome Installation
+See at bottom of the file
+
+## Firefox Installation
+Link to Firefox Add Ons: [addons.mozilla.org/gptpromptmaster](https://addons.mozilla.org/firefox/addon/gptpromptmaster/)
+
+## Click on this image to get to the youtube video:
 
 [![Youtube Video](https://img.youtube.com/vi/MKMO05k7cfU/0.jpg)](https://www.youtube.com/watch?v=MKMO05k7cfU)
 
