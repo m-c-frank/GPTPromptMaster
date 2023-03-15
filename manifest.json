@@ -6,6 +6,11 @@
   "action": {
     "default_popup": "popup.html"
   },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "GPTPromptMaster@mcfrank.com"
+    }
+  },
   "permissions": [
     "activeTab",
     "scripting",
