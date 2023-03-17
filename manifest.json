@@ -1,19 +1,12 @@
 {
   "manifest_version": 3,
   "name": "GPTPromptMaster",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Create custom Pre and Postprompts for ChatGPT",
   "action": {
     "default_popup": "popup.html"
   },
-  "browser_specific_settings": {
-    "gecko": {
-      "id": "GPTPromptMaster@mcfrank.com"
-    }
-  },
   "permissions": [
-    "activeTab",
-    "scripting",
     "storage"
   ],
   "content_scripts": [
