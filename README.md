@@ -3,10 +3,13 @@ This is a browser extension that allows you to define your own pre and post prom
 See below for how to install it in chrome and firefox!
 
 ## Chrome Installation
-See at bottom of the file
+Link to Chrome Extension: [chrome.google.com/gptpromptmaster](https://chrome.google.com/webstore/detail/gptpromptmaster/oaiidilobjckieciljhmienhjbninfib)
 
 ## Firefox Installation
 Link to Firefox Add On: [addons.mozilla.org/gptpromptmaster](https://addons.mozilla.org/firefox/addon/gptpromptmaster/)
+
+## Installation from source
+See at the bottom of the page :)
 
 ## Click on this image to get to the youtube video:
 
