@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "GPTPromptMaster",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Create custom Pre and Postprompts for ChatGPT",
   "action": {
     "default_popup": "popup.html"
@@ -12,7 +12,7 @@
   "content_scripts": [
     {
       "matches": [
-        "https://chat.openai.com/chat*"
+        "https://chat.openai.com/*"
       ],
       "css": [
         "content.css"
