@@ -9,6 +9,11 @@
   "permissions": [
     "storage"
   ],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "GPTPromptMaster@mcfrank.com"
+    }
+  },
   "content_scripts": [
     {
       "matches": [
