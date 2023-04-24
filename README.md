@@ -1,3 +1,6 @@
+# ARCHIVED
+This extension is replaced by chatgpt plugins.
+
 # GPTPromptMaster
 This is a browser extension that allows you to define your own pre and post prompts that are added to the chatGPT prompt.
 See below for how to install it in chrome and firefox!
